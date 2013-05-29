@@ -7,11 +7,8 @@ register_shutdown_function('sysfunc::handle_fatal_error');
 
 set_error_handler('sysfunc::custom_error');
 
-
-if ( ! function_exists('load'))
-{
-    function load($name, $type='model', $data=array())
-    {
+/*
+function load($name, $type='model', $data=array()){
         static $loader = NULL;
         if (is_null($loader))
         {
@@ -21,9 +18,8 @@ if ( ! function_exists('load'))
         }
 
         return $loader->$type($name, $data);
-    }
 }
-
+*/
 
 //分析url请求
 # 如果为空，则是访问根地址
@@ -34,7 +30,7 @@ if (empty($url))
     $func = 'welcome';
 }else{
     $URI = explode('/', $url);
-    var_dump($URI);
+    //var_dump($URI);
     # 如果function为空 则默认访问index
     if (count($URI) < 2)
     {
@@ -52,11 +48,13 @@ if (empty($url))
 require BASEPATH.'/sys/sys_in.php';
 
 require 'config.php';
+//加载系统类
+$oIn =  new in( array('sys'=>'kk,123','db_mysql'=>$db_config,'loader'=>'','sysfunc'=>''));
+$oIn->control($class,'front');
+//进入控制层
 
-$oIn =  new in( array('sys'=>'kk,123','db_mysql'=>$db_config,$class=>'kk'));
 
 $var = array_slice($URI, 2);
-echo $func;
 $oIn->run($class, $func, $var);
 
 unset($oIn);

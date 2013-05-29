@@ -1,6 +1,6 @@
 <?php
 
-class Loader
+class loader
 {
     private $_loaded_models = array();
     private $_loaded_librarys = array();
@@ -91,7 +91,9 @@ class Loader
         $view = strtolower($view);
 
         extract($data);
-
+        
+        ob_clean();
+        
         ob_start();
         # 否则加载文件
         include ROOT."/".$path."/view/{$view}.html";
@@ -115,18 +117,28 @@ class Loader
 
         $search = array('<endexist>', '<endfor>');
         $content = str_replace($search, '<?php } ?>', $content);
-
-        $content = eval(' ?>'.$content);
-
+      // echo $content;
+        //$content = eval(' '.$content);
+        
         if ( ! empty($data['do_not_display']))
         {
+        	
             return $content;
+            
         }
 
         echo $content;
 
         return TRUE;
     }
+    public function sayme(){
+    	
+    	echo "i am loader class";
+    }
+	public static function  __isStatic(){
+		
+		return true;
+	}
 
 
 }

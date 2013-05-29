@@ -57,27 +57,30 @@ class in{
 			      	
 			          require_once $directory.'/'.$className . '.php';
 			          
-			          if( class_exists( $className )  &&  (!$this->hasStaticMethod( $className )) ){
-			          	
-			          	if( $classParam ){
-			          		if( is_string( $classParam ) ){
-			          			
-			          			$tmpClassParam = explode(',' ,$classParam);
-			          			
-			          			$this->$className = $this->newInst($className, $tmpClassParam);
-			          			
-			          		}elseif( is_array( $classParam ) ){
-			          			$this->$className = $this->newInst($className, $classParam);
-			          			
-			          		}else{
-			          			
-			          			exit(" class Param  is not right");
-			          			
-			          		}
-			          		
+			          if( class_exists( $className )  ) {
+			          	if( !$this->hasStaticMethod( $className ) ){
+				          	if( $classParam ){
+				          		if( is_string( $classParam ) ){
+				          			
+				          			$tmpClassParam = explode(',' ,$classParam);
+				          			
+				          			$this->$className = $this->newInst($className, $tmpClassParam);
+				          			
+				          		}elseif( is_array( $classParam ) ){
+				          			$this->$className = $this->newInst($className, $classParam);
+				          			
+				          		}else{
+				          			
+				          			exit(" class Param  is not right");
+				          			
+				          		}
+				          		
+				          	}else{
+				          		
+				          		$this->$className  = new $className();
+				          	}
 			          	}else{
-			          		
-			          		$this->$className  = new $className();
+			          		     $this->$className = $className::get_instance();
 			          	}
 			          	
 			          }else{
@@ -131,7 +134,7 @@ class in{
 			
 			if ( ! method_exists($this->$className, $func)){
 				
-				    show_error(array('title'=>'function error', 'message'=>"function {$func} is not exist"));
+				    sysfunc::show_error(array('title'=>'function error', 'message'=>"function {$func} is not exist"));
 				    
 				}
 				
@@ -143,6 +146,39 @@ class in{
 								);
 			
 		}
+		
+        public function control($className ,$path ){
+        	
+        	if(file_exists( $path.'/control/'.$className.'.php')){
+        		
+        		require_once $path.'/control/'.$className.'.php';
+        		
+        		$className = str_ireplace('\\','/',$className);
+        		
+        		$class_array = explode('/',$className);
+        		
+        		$class = array_pop($class_array); 
+        		if(  class_exists( $class ) ){
+        			
+        			$inten = &$this;
+        			
+        			$this->$class = new $class( $inten );
+        			
+        		}else{
+        			
+        			sysfunc::show_error(array('title'=>'error', 'message'=>"class {$className} is already exist "));
+        			
+        		}
+        		
+        		
+        	}else{
+        		   	sysfunc::show_error(array('title'=>'error', 'message'=>"class {$className}.php is not exist "));
+        		
+        	}
+        	
+        	
+        	
+        }
 	
 	
 }

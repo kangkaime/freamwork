@@ -7,10 +7,10 @@ class hello{
 		$this->name = $name;
 		
 	}
-	public function say( $name ){
+	public function say( $name = ''){
 		
-		if( $this->name )
-			echo 'my name is'.$this->name.' hhah';
+		if( $name )
+			echo 'my name is'.$name.' hhah';
 	    else
 	        echo 'hello stranger!';
 	    
